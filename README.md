@@ -24,6 +24,9 @@ REST (Representational State Transfer) es un modelo que permite que aplicaciones
 - Al ser un lenguaje compilado, aporta un mayor rendimiento.
 - Poco _boilerplate_ lo que simplifica mucho el código.
 - Concurrencia. ¿Que sería de Go sin concurrencia?.
+
+
+**Este repositorio es solo para pruebas, no para un entorno de producción real**
   
 
 
