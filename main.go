@@ -85,11 +85,11 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 		if u.ID == id {
 			//slices are passed with spread operator
 			users = slices.Delete(users, i, i+1)
-			fmt.Fprintf(w, "Book with ID %s deleted", id)
+			fmt.Fprintf(w, "User with ID %s deleted", id)
 			return
 		}
 	}
-	http.Error(w, "Book not found", http.StatusNotFound)
+	http.Error(w, "User not found", http.StatusNotFound)
 }
 
 func main() {
