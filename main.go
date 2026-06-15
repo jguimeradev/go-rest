@@ -12,6 +12,11 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to SIMPLE REST API")
 }
 
+func health(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+}
+
 func getUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode(users)
@@ -94,13 +99,15 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/users", getUsers)
-	http.HandleFunc("/user", getUser)
-	http.HandleFunc("/user/create", createUser)
-	http.HandleFunc("/user/update", updateUser)
-	http.HandleFunc("/user/delete", deleteUser)
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /", homePage)
+	mux.HandleFunc("GET /health", health)
+	mux.HandleFunc("GET /users", getUsers)
+	mux.HandleFunc("GET /user", getUser)
+	mux.HandleFunc("POST /user/create", createUser)
+	mux.HandleFunc("PUT /user/update", updateUser)
+	mux.HandleFunc("DELETE /user/delete", deleteUser)
 
-	log.Fatal(http.ListenAndServe(":6969", nil))
+	log.Fatal(http.ListenAndServe(":6969", mux))
 
 }
