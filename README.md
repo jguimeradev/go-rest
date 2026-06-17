@@ -5,19 +5,64 @@ RESTful API en Go para utilizar con otros proyectos enfocados a *DevOps* y *Clou
 
 ## ¿QUÉ ES UNA REST API?
 
-REST (Representational State Transfer) es un modelo que permite que aplicaciones se comuniquen mediante el uso de API sobre HTTP. REST no es un protocolo ( _como SOAP_ ), sino un conjunto de "indicaciones" lo que permite implementarlo de diferentes maneras.
+REST, **Representational State Transfer**, es un conjunto de reglas sobre como se comunican servidores y clientes sobre el protocolo *http*
+
 
 ## CARACTERÍSTICAS DE UNA REST API:
 
-- Sin estado (Stateless): Las peticiones del cliente son independientes. El servidor no almacena información ni sesiones del cliente entre solicitudes, por lo que cada llamada debe incluir todos los datos necesarios para procesarse.
-- Interfaz uniforme: Garantiza que las peticiones y respuestas sigan un formato coherente, predecible y estandarizado. Se utilizan métodos HTTP estándar para manipular datos:
+### 1. Sin estado (Stateless): 
+Las peticiones del cliente son independientes. El servidor no almacena los datos de sesión, por lo que cada petición deben incluir todos los datos necesarios para procesarse:
+```
+PUT /users/42 HTTP/1.1
+Host: localhost:6969
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+{"user": "John", "email": "john@example.com"}
+
+```
+
+El servidor, una vez procesada la petición, no necesita recordar nada. La siguiente llevará su propio conjunto de datos. El cliente **sí** que guarda los datos que necesite para construir la siguiente petición.
+
+Al mismo tiempo, se utilizan cachés que guardan copias de respuestas concretas (por ejemplo, el resultado de `GET /users/1`) para optimizar el rendimiento de la aplicación sin comprometer el principio de *statelessness*
+
+
+### 2. Interfaz uniforme: 
+
+La API utiliza una formato coherente, predecible y estandarizado, del mismo modo que lo hacen los recursos. Aquí es dónde el diseño de las URL y los métodos HTTP aparecen.
+
+#### ¿Qué es un recurso?
+
+Un recurso es aquello sobre lo que trata la API. Siguiendo el ejemplo anterior, el recurso es `user`.
+
+Un recurso tiene:
+- Una **URL** que lo identifica
+- Una **representación** (normalmente, JSON) que lo describe:
+
+```json
+{
+  "id": "1",
+  "username": "John",
+  "email": "john@example.com"
+}
+```
+
+Este objeto JSON es la representación del usuario con id `1`. El servidor contiene los datos reales, este JSON es una copia, (una *representación*), que se envía al cliente.
+
+#### ¿Qué es un método HTTP?
+
+A través del los **métodos HTTP** el cliente le comunica al servidor qué hacer con el recurso solicitado:
   - `GET`: Para solicitar o leer datos.
   - `POST`: Para crear nuevos recursos.
   - `PUT / PATCH`: Para actualizar recursos existentes.
   - `DELETE`: Para eliminar un recurso.
-- Cliente-Servidor: Ambos sistemas están desacoplados y son independientes. El servidor se encarga del almacenamiento y lógica de negocio, mientras que el cliente maneja la interfaz de usuario y la experiencia.
-- Almacenamiento en caché (Cacheable): Las respuestas del servidor deben indicar explícitamente si son almacenables en caché o no. Esto mejora drásticamente el rendimiento y reduce la latencia al evitar procesar peticiones repetidas.
-- Sistema en capas (Layered System): El cliente no necesita saber si se comunica directamente con el servidor o a través de intermediarios como proxies, balanceadores de carga o gateways. Esto permite escalar y asegurar la arquitectura de forma transparente.
+  
+En resumen, la URL identifica el *qué* y el método indica *qué hacer*
+
+
+### 3. Separación Cliente - Servidor: 
+
+Son sistemas independientes y uno no sabe nada de como funciona internamente el otro. El cliente no sabe como el servidor almacena los datos, el servidor no sabe como funciona el cliente. Solo se comunican mediante los contratos establecidos en las API
 
 
 ## ¿POR QUÉ EN GO?

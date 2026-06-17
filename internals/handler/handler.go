@@ -27,6 +27,7 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 }
 
 func (h *Handler) homePage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-type", "text/plain")
 	fmt.Fprintf(w, "Welcome to SIMPLE REST API")
 }
 
