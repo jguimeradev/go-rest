@@ -1,6 +1,4 @@
-// act as database
-
-package main
+package store
 
 import (
 	"fmt"
@@ -20,10 +18,9 @@ type Store struct {
 	nextID int
 }
 
-func NewStore() *Store {
+func New() *Store {
 	s := &Store{users: make(map[string]User)}
 
-	// seed data — IDs are clean strings with no trailing spaces (improvement #10)
 	seed := []User{
 		{ID: "1", Username: "User1", Email: "user1@example.com"},
 		{ID: "2", Username: "User2", Email: "user2@example.com"},
@@ -34,7 +31,6 @@ func NewStore() *Store {
 		s.users[u.ID] = u
 	}
 
-	// set nextID to the highest existing numeric ID so new IDs never collide (improvement #5)
 	for id := range s.users {
 		if n, err := strconv.Atoi(id); err == nil && n > s.nextID {
 			s.nextID = n
